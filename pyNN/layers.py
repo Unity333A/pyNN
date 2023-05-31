@@ -29,6 +29,13 @@ class Layer:
             super().__init__()
             self.params["w"]=np.random.randn(input_size,output_size)
             self.params["b"]=np.random.randn(output_size)
-
+    
+    def forward(self,inputs:Tensor)->Tensor:
+        """
+        outputs=inputs @ w + b
+        """
+        self.inputs=inputs #Storing the inputs for farther usage during backpropagation
+        return inputs @ self.params["w"] + self.params["b"]
+     
     
 
