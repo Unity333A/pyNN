@@ -5,6 +5,7 @@ from pyNN.tensor import Tensor
 class Layer:
     def __init__(self)->None:
         self.params:Dict[str,Tensor]={}
+        self.grads: Dict[str,Tensor]={}
     def forward(self, inputs:Tensor)->Tensor:
         """
         Generate the tensor output using
@@ -37,5 +38,28 @@ class Layer:
         self.inputs=inputs #Storing the inputs for farther usage during backpropagation
         return inputs @ self.params["w"] + self.params["b"]
      
+    def backward(self, grad:Tensor)->Tensor:
+        """
+        If y=f(x) and x = a * b + c
+        then dy/da = f'(x) * b
+        and dy/db = f'(x) * a
+        and dy/dc = f'(x)
+
+        if y = f(x) and x = a @ b + c
+        then dy/da = f'(x) * b.T
+        and dy/db = a.T @ f'(x)
+        and dy/dc = f'(x)
+        """
+        self.grads["b"] = np.sum(grad,axis=0)
+        self.grads["w"] = self.inputs.T @ grad
+        return grad @ self.params["w"]
     
+
+
+
+
+
+
+
+
 
